@@ -21,37 +21,21 @@ int multiplyStrings(List<String> list) {
   return total;
 }
 
-void doProcessor(String raw, bool isMulEnabled) {
-  
-  if (raw.isEmpty) return;
+void doProcessor(String raw, String stopper) {
 
-  int index = raw.indexOf(doSrt);
-  int dontIndex = raw.indexOf(dontStr);
+  int index = raw.indexOf(stopper);
   
-
-  if (index == -1 && dontIndex == -1) {
-    if (isMulEnabled) {
-      addToCleaned(raw); 
-    }
+  if (index == -1) {
     return;
   }
-
-  if (index != -1 && (dontIndex == -1 || index < dontIndex)) {
-
-    String beforeDo = raw.substring(0, index);
-    if (isMulEnabled) {
-      addToCleaned(beforeDo);
-    }
-    doProcessor(raw.substring(index + doSrt.length), true);
-  } else if (dontIndex != -1) {
-
-    String beforeDont = raw.substring(0, dontIndex);
-    if (isMulEnabled) {
-      addToCleaned(beforeDont);
-    }
-
-    doProcessor(raw.substring(dontIndex + dontStr.length), false);
+  index = index + stopper.length;
+  if (stopper == dontStr) {
+    stopper = doSrt;
+    addToCleaned(raw.substring(0, index));
+  } else {
+    stopper = dontStr;
   }
+  doProcessor(raw.substring(index), stopper);
 }
 
 void addToCleaned(String subraw) {
@@ -68,7 +52,7 @@ void main() async {
 
   String string = await file.readAsString();
 
-  doProcessor(string, true);
+  doProcessor(string, dontStr);
 
   print(multiplyStrings(cleaned));  
 }
