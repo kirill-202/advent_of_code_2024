@@ -4,9 +4,9 @@ import "dart:io";
 
 enum Direction {
   up,
-  left,
   right,
-  down
+  down,
+  left
 }
 
 class Map {
@@ -65,66 +65,31 @@ class Guard {
 
     switch (this.direction) {
       case Direction.up:
-        nextPosition = map.getCell(this.currentPosition!.x, this.currentPosition!.y - 1);
-        if (nextPosition == null) {
-          leftMap = true;
-          return;
-        }
-        if (!traverceble(nextPosition)) {
-          direction = Direction.right;
-          return;
-        }
-        this.currentPosition = nextPosition;
-        if (!nextPosition.visited) {
-          this.travercedCells++;
-        }
-        
+        nextPosition = map.getCell(this.currentPosition!.x, this.currentPosition!.y - 1);  
         break;
       case Direction.left:
         nextPosition = map.getCell(this.currentPosition!.x-1, this.currentPosition!.y);
-        if (nextPosition == null) {
-          leftMap = true;
-          return;
-        }
-        if (!traverceble(nextPosition)) {
-          direction = Direction.up;
-          return;
-        }
-        this.currentPosition = nextPosition;
-        if (!nextPosition.visited) {
-          this.travercedCells++;
-        }
         break;
       case Direction.right:
         nextPosition = map.getCell(this.currentPosition!.x+1, this.currentPosition!.y);
-        if (nextPosition == null) {
-          leftMap = true;
-          return;
-        }
-        if (!traverceble(nextPosition)) {
-          direction = Direction.down;
-          return;
-        }
-        this.currentPosition = nextPosition;
-        if (!nextPosition.visited) {
-          this.travercedCells++;
-        }
         break;
       case Direction.down:
         nextPosition = map.getCell(this.currentPosition!.x, this.currentPosition!.y+1);
-        if (nextPosition == null) {
-          leftMap = true;
-          return;
-        }
-        if (!traverceble(nextPosition)) {
-          direction = Direction.left;
-          return;
-        }
-        this.currentPosition = nextPosition;
-        if (!nextPosition.visited) {
-          this.travercedCells++;
-        }
         break;
+    }
+    if (nextPosition == null) {
+      leftMap = true;
+      return;
+    }
+    if (!traverceble(nextPosition)) {
+      var values = Direction.values;
+      int nextIndex = (this.direction.index + 1) % values.length;
+      this.direction = values[nextIndex];
+      return;
+    }
+    this.currentPosition = nextPosition;
+    if (!nextPosition.visited) {
+      this.travercedCells++;
     }
     print("next cell is $nextPosition");
   }
@@ -146,7 +111,7 @@ void main() async {
   var map = Map();
   var guard = Guard();
 
-  var file = File("input.txt");
+  var file = File("test.txt");
 
 
   var lines = await file.readAsLines();
