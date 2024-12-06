@@ -46,6 +46,15 @@ class Cell {
   String toString() {
     return 'Cell(x: $x, y: $y, value: $value)';
   }
+
+  bool traverceble() {
+  if (this.value == "#") {
+    return false;
+  }
+  return true;
+
+}
+
 }
 
 class Guard {
@@ -81,7 +90,7 @@ class Guard {
       leftMap = true;
       return;
     }
-    if (!traverceble(nextPosition)) {
+    if (!nextPosition.traverceble()) {
       var values = Direction.values;
       int nextIndex = (this.direction.index + 1) % values.length;
       this.direction = values[nextIndex];
@@ -93,15 +102,6 @@ class Guard {
     }
     print("next cell is $nextPosition");
   }
-
-  bool traverceble(Cell cell) {
-    if (cell.value == "#") {
-      return false;
-    }
-    return true;
-
-  }
-
 
 
 }
